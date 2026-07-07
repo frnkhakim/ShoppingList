@@ -1,10 +1,11 @@
 import { useState } from "react";
 import type { ShoppingItem } from "../types/ShoppingItem";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export function useShoppingList() {
     const [shoppingItems, setShoppingItems] =
         useState<ShoppingItem[]>([]);
-
+    
     const addItem = (name: string) => {
         const newItem: ShoppingItem = {
             id: Date.now().toString(),
