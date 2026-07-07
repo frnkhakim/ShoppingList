@@ -6,6 +6,7 @@ interface ShoppingListProps {
 import { View, Text } from "react-native";
 import ShoppingItem from "./ShoppingItem";
 import { FlatList } from "react-native";
+import { useShoppingList } from "../hooks/useShoppingList";
 
 export default function ShoppingList({
     items,
@@ -17,7 +18,7 @@ export default function ShoppingList({
     return (
        <FlatList
             data={items}
-            renderItem={({ item }) => <ShoppingItem {...item} onDelete={onDelete} />}
+            renderItem={({ item }) => <ShoppingItem {...item} onDelete={onDelete} onEdit={() => {}} />}
             keyExtractor={(item) => item.id}
         />
     );

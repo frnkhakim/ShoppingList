@@ -53,6 +53,9 @@ export function useShoppingList() {
         saveItems(shoppingItems);
     }, [shoppingItems, storageAvailable]);
 
+    const [editingItem, setEditingItem] =
+    useState<ShoppingItem | null>(null);
+
     return {
         shoppingItems,
         addItem,
