@@ -5,11 +5,7 @@ import { useState } from "react";
 import { Button } from "react-native";
 import ShoppingInput from "../components/ShoppingInput";
 import ShoppingList from "../components/ShoppingList";
-
-type ShoppingItem = {
-    id: string;
-    name: string;
-};
+import type { ShoppingItem } from "../types/ShoppingItem";
 
 export default function HomeScreen() {
 
@@ -33,8 +29,8 @@ export default function HomeScreen() {
       <ShoppingInput 
         onAddItem={addItem}
       />
-      <ShoppingList items={shoppingItems} onDelete={(item: ShoppingItem) => {
-        const updatedItems = shoppingItems.filter(i => i.id !== item.id);
+      <ShoppingList items={shoppingItems} onDelete={(id: string) => {
+        const updatedItems = shoppingItems.filter(i => i.id !== id);
         setShoppingItems(updatedItems);
       }} />
     </View>

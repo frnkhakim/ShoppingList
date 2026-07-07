@@ -1,20 +1,20 @@
 import {    Pressable, Text, StyleSheet, View } from "react-native";
+import type { ShoppingItem } from "../types/ShoppingItem";
 
-interface ShoppingItemProps {
-    item: { id: string; name: string };
-    onDelete: (item: { id: string; name: string }) => void;
+interface ShoppingItemProps extends ShoppingItem {
+    onDelete: (id: string) => void;
 }
     
 
-export default function ShoppingItem({ item, onDelete }: ShoppingItemProps) {
+export default function ShoppingItem({ id, name, onDelete }: ShoppingItemProps) {
     return (
          <View style={styles.item}>
 
     <Text>
-        {item.name}
+        {name}
     </Text>
 
-    <Pressable onPress={() => onDelete(item)}>
+    <Pressable onPress={() => onDelete(id)}>
         <Text style={styles.deleteText}>
             🗑️
         </Text>
