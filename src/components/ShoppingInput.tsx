@@ -18,6 +18,10 @@ export default function ShoppingInput({ onAddItem }: ShoppingInputProps) {
             <Button
                 title="Add"
                 onPress={() => {
+                    if (item.trim()) {
+                        onAddItem(item);
+                        setItem("");
+                    }
                 }}
             />
         </View>
