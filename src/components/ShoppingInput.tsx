@@ -2,7 +2,7 @@ interface ShoppingInputProps {
     onAddItem: (item: string) => void;
 }
 
-import { View, TextInput, Button, StyleSheet } from "react-native";
+import { View, TextInput, Pressable, StyleSheet, Text } from "react-native";
 import { useState } from "react";
     
 const styles = StyleSheet.create({
@@ -22,6 +22,19 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     paddingHorizontal: 12,
     paddingVertical: 10,
+    },
+    button: {
+        backgroundColor: "#2196F3",
+        paddingHorizontal: 20,
+        paddingVertical: 12,
+        borderRadius: 8,
+    },  
+    buttonText: {
+    color: "white",
+    fontWeight: "bold",
+},
+    buttonPressed: {
+        backgroundColor: "#1976D2",
     }
 });
 
@@ -36,16 +49,21 @@ export default function ShoppingInput({ onAddItem }: ShoppingInputProps) {
                 value={item}
                 onChangeText={setItem}
             />
-            <Button
-             
-                title="Add"
+            <Pressable
+            
+                style={({ pressed }) => [
+                    styles.button,
+                    pressed && styles.buttonPressed,
+                ]}
                 onPress={() => {
                     if (item.trim()) {
                         onAddItem(item);
                         setItem("");
                     }
                 }}
-            />
+            >
+                <Text style={styles.buttonText}>Add</Text>
+            </Pressable>
         </View>
     );
 }
