@@ -10,6 +10,7 @@ export function useShoppingList() {
         const newItem: ShoppingItem = {
             id: Date.now().toString(),
             name,
+            completed: false,
         };
         setShoppingItems([...shoppingItems, newItem]);
     };
@@ -17,6 +18,22 @@ export function useShoppingList() {
     const deleteItem = (id: string) => {
         setShoppingItems(
             shoppingItems.filter(item => item.id !== id)
+        );
+    };
+
+    const updateItem = (id: string, newName: string) => {
+        setShoppingItems(
+            shoppingItems.map(item =>
+                item.id === id ? { ...item, name: newName } : item
+            )
+        );
+    };
+
+    const toggleComplete = (id: string) => {
+        setShoppingItems(
+            shoppingItems.map(item =>
+                item.id === id ? { ...item, completed: !item.completed } : item
+            )
         );
     };
 
@@ -53,12 +70,11 @@ export function useShoppingList() {
         saveItems(shoppingItems);
     }, [shoppingItems, storageAvailable]);
 
-    const [editingItem, setEditingItem] =
-    useState<ShoppingItem | null>(null);
-
     return {
         shoppingItems,
         addItem,
         deleteItem,
+        updateItem,
+        toggleComplete,
     };
 }

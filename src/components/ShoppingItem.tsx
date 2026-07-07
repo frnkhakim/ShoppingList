@@ -1,33 +1,31 @@
-import {    Pressable, Text, StyleSheet, View } from "react-native";
+import { Pressable, Text, StyleSheet, View } from "react-native";
 import type { ShoppingItem } from "../types/ShoppingItem";
-import { useShoppingList } from "../hooks/useShoppingList";
+
 interface ShoppingItemProps extends ShoppingItem {
     onDelete: (id: string) => void;
-    onEdit: (item: ShoppingItem) => void;
+    onEdit: () => void;
+    onToggle: (id: string) => void;
 }
-    
 
-export default function ShoppingItem({ id, name, onDelete, onEdit }: ShoppingItemProps) {
-    const item = { id, name };
-
+export default function ShoppingItem({ id, name, completed, onDelete, onEdit, onToggle }: ShoppingItemProps) {
     return (
-         <View style={styles.item}>
+        <View style={[styles.item, completed && styles.itemCompleted]}>
+            <Pressable onPress={() => onToggle(id)} style={styles.checkbox}>
+                <Text style={styles.checkboxText}>{completed ? '☑️' : '☐'}</Text>
+            </Pressable>
 
-    <Text>
-        {name}
-    </Text>
+            <Text style={[styles.text, completed && styles.textCompleted]}>
+                {name}
+            </Text>
 
-    <Pressable onPress={() => onEdit(item)}>
-    <Text>Edit</Text>
-</Pressable>
+            <Pressable onPress={onEdit}>
+                <Text style={styles.editText}>✏️</Text>
+            </Pressable>
 
-    <Pressable onPress={() => onDelete(id)}>
-        <Text style={styles.deleteText}>
-            🗑️
-        </Text>
-    </Pressable>
-
-</View>
+            <Pressable onPress={() => onDelete(id)}>
+                <Text style={styles.deleteText}>🗑️</Text>
+            </Pressable>
+        </View>
     );
 }
 
@@ -35,19 +33,48 @@ const styles = StyleSheet.create({
     item: {
         padding: 16,
         borderBottomWidth: 1,
-        borderBottomColor: '#ccc',
+        borderBottomColor: '#e0e0e0',
         width: '100%',
-        backgroundColor: "#f2f2f2",
+        backgroundColor: '#ffffff',
         borderRadius: 8,
-        marginBottom: 12,
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
+        marginBottom: 8,
+        marginHorizontal: 10,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.1,
+        shadowRadius: 2,
+        elevation: 2,
+    },
+    itemCompleted: {
+        opacity: 0.6,
+        backgroundColor: '#f9f9f9',
+    },
+    checkbox: {
+        paddingRight: 12,
+    },
+    checkboxText: {
+        fontSize: 20,
     },
     text: {
-    fontSize: 18,
+        flex: 1,
+        fontSize: 16,
+        color: '#333',
+        fontWeight: '500',
+    },
+    textCompleted: {
+        textDecorationLine: 'line-through',
+        color: '#999',
+        fontWeight: '400',
+    },
+    editText: {
+        fontSize: 18,
+        marginHorizontal: 8,
     },
     deleteText: {
-    fontSize: 20,
-    }
+        fontSize: 18,
+        marginHorizontal: 8,
+    },
 });

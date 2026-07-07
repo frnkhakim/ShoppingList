@@ -1,6 +1,8 @@
 interface ShoppingListProps {
-    items: { id: string; name: string }[];
+    items: { id: string; name: string; completed: boolean }[];
     onDelete: (id: string) => void;
+    onEdit: (item: { id: string; name: string; completed: boolean }) => void;
+    onToggle: (id: string) => void;
 }
 
 import { View, Text } from "react-native";
@@ -10,7 +12,9 @@ import { useShoppingList } from "../hooks/useShoppingList";
 
 export default function ShoppingList({
     items,
-    onDelete
+    onDelete,
+    onEdit,
+    onToggle
 }: ShoppingListProps) {
 
     console.log(items);
@@ -18,7 +22,7 @@ export default function ShoppingList({
     return (
        <FlatList
             data={items}
-            renderItem={({ item }) => <ShoppingItem {...item} onDelete={onDelete} onEdit={() => {}} />}
+            renderItem={({ item }) => <ShoppingItem {...item} onDelete={onDelete} onEdit={() => onEdit(item)} onToggle={onToggle} />}
             keyExtractor={(item) => item.id}
         />
     );
