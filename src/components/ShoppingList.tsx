@@ -3,6 +3,7 @@ interface ShoppingListProps {
 }
 
 import { View, Text } from "react-native";
+import ShoppingItem from "./ShoppingItem";
 
 export default function ShoppingList({
     items,
@@ -13,7 +14,10 @@ export default function ShoppingList({
     return (
         <View>
             {items.map((item, index) => (
-                <Text key={index}>{item}</Text>
+                <ShoppingItem
+                    key={index}
+                    item={item}
+                />
             ))}
         </View>
     );
