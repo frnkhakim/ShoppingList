@@ -1,9 +1,20 @@
-import { View } from "react-native";
+interface ShoppingListProps {
+    items: string[];
+}
 
-export default function ShoppingList() {
+import { View, Text } from "react-native";
+
+export default function ShoppingList({
+    items,
+}: ShoppingListProps) {
+
+    console.log(items);
+
     return (
         <View>
-
+            {items.map((item, index) => (
+                <Text key={index}>{item}</Text>
+            ))}
         </View>
     );
 }
