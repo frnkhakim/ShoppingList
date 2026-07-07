@@ -25,7 +25,7 @@ export default function HomeScreen() {
       <ShoppingInput 
         onAddItem={addItem}
       />
-      <ShoppingList />
+      <ShoppingList items={shoppingItems} />
     </View>
   );
 }
