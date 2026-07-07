@@ -1,4 +1,4 @@
-import {    Pressable, Text, StyleSheet } from "react-native";
+import {    Pressable, Text, StyleSheet, View } from "react-native";
 
 interface ShoppingItemProps {
     item: string;
@@ -8,14 +8,19 @@ interface ShoppingItemProps {
 
 export default function ShoppingItem({ item, onDelete }: ShoppingItemProps) {
     return (
-         <Pressable
-            style={styles.item}
-            onPress={() => onDelete(item)}
-        >
-            <Text style={styles.text}>
-                {item}
-            </Text>
-        </Pressable>
+         <View style={styles.item}>
+
+    <Text>
+        {item}
+    </Text>
+
+    <Pressable onPress={() => onDelete(item)}>
+        <Text style={styles.deleteText}>
+            🗑️
+        </Text>
+    </Pressable>
+
+</View>
     );
 }
 
@@ -28,8 +33,14 @@ const styles = StyleSheet.create({
         backgroundColor: "#f2f2f2",
         borderRadius: 8,
         marginBottom: 12,
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
     },
     text: {
     fontSize: 18,
+    },
+    deleteText: {
+    fontSize: 20,
     }
 });
