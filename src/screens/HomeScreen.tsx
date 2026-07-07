@@ -4,6 +4,7 @@ import Title from "../components/Title";
 import { useState } from "react";
 import { Button } from "react-native";
 import ShoppingInput from "../components/ShoppingInput";
+import ShoppingList from "../components/ShoppingList";
 
 
 export default function HomeScreen() {
@@ -24,7 +25,7 @@ export default function HomeScreen() {
       <ShoppingInput 
         onAddItem={addItem}
       />
-      
+      <ShoppingList />
     </View>
   );
 }
