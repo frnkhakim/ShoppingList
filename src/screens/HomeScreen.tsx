@@ -6,17 +6,25 @@ import { Button } from "react-native";
 import ShoppingInput from "../components/ShoppingInput";
 import ShoppingList from "../components/ShoppingList";
 
+type ShoppingItem = {
+    id: string;
+    name: string;
+};
 
 export default function HomeScreen() {
 
     const [title, setTitle] = useState("My Shopping List");
-    const [shoppingItems, setShoppingItems] = useState<string[]>([]);
-    const addItem = (item: string) => {
-    const updatedItems = [...shoppingItems, item];
+    const [shoppingItems, setShoppingItems] = useState<ShoppingItem[]>([]);
+   const addItem = (name: string) => {
+    const newItem: ShoppingItem = {
+        id: Date.now().toString(),
+        name,
+    };
 
-    setShoppingItems(updatedItems);
-
-    console.log(updatedItems);
+    setShoppingItems([
+        ...shoppingItems,
+        newItem,
+    ]);
 };
 
   return (
@@ -25,8 +33,8 @@ export default function HomeScreen() {
       <ShoppingInput 
         onAddItem={addItem}
       />
-      <ShoppingList items={shoppingItems} onDelete={(item) => {
-        const updatedItems = shoppingItems.filter(i => i !== item);
+      <ShoppingList items={shoppingItems} onDelete={(item: ShoppingItem) => {
+        const updatedItems = shoppingItems.filter(i => i.id !== item.id);
         setShoppingItems(updatedItems);
       }} />
     </View>

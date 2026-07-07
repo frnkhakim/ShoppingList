@@ -1,6 +1,6 @@
 interface ShoppingListProps {
-    items: string[];
-    onDelete: (item: string) => void;
+    items: { id: string; name: string }[];
+    onDelete: (item: { id: string; name: string }) => void;
 }
 
 import { View, Text } from "react-native";
@@ -18,7 +18,7 @@ export default function ShoppingList({
        <FlatList
             data={items}
             renderItem={({ item }) => <ShoppingItem item={item} onDelete={onDelete} />}
-            keyExtractor={(item, index) => index.toString()}
+            keyExtractor={(item) => item.id}
         />
     );
 }

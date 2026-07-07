@@ -3,9 +3,10 @@ import { FlatList, Text, StyleSheet, View } from 'react-native';
 
 interface ItemListProps {
   items: string[];
+  onDelete: (item: string) => void;
 }
 
-export default function ItemList({ items }: ItemListProps) {
+export default function ItemList({ items, onDelete }: ItemListProps) {
   return (
     <FlatList
       data={items}
