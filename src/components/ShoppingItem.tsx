@@ -1,9 +1,24 @@
-import { Text, StyleSheet } from "react-native";
+import {    Pressable, Text, StyleSheet } from "react-native";
 
 interface ShoppingItemProps {
     item: string;
+    onDelete: (item: string) => void;
 }
     
+
+export default function ShoppingItem({ item, onDelete }: ShoppingItemProps) {
+    return (
+         <Pressable
+            style={styles.item}
+            onPress={() => onDelete(item)}
+        >
+            <Text style={styles.text}>
+                {item}
+            </Text>
+        </Pressable>
+    );
+}
+
 const styles = StyleSheet.create({
     item: {
         padding: 16,
@@ -18,13 +33,3 @@ const styles = StyleSheet.create({
     fontSize: 18,
     }
 });
-
-export default function ShoppingItem({ item }: ShoppingItemProps) {
-    return (
-        <Text style={styles.item}>
-            <Text style={styles.text}>
-                {item}
-            </Text>
-        </Text>
-    );
-}

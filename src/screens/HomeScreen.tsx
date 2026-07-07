@@ -25,7 +25,10 @@ export default function HomeScreen() {
       <ShoppingInput 
         onAddItem={addItem}
       />
-      <ShoppingList items={shoppingItems} />
+      <ShoppingList items={shoppingItems} onDelete={(item) => {
+        const updatedItems = shoppingItems.filter(i => i !== item);
+        setShoppingItems(updatedItems);
+      }} />
     </View>
   );
 }
