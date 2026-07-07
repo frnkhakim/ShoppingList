@@ -4,6 +4,7 @@ interface ShoppingListProps {
 
 import { View, Text } from "react-native";
 import ShoppingItem from "./ShoppingItem";
+import { FlatList } from "react-native";
 
 export default function ShoppingList({
     items,
@@ -12,13 +13,10 @@ export default function ShoppingList({
     console.log(items);
 
     return (
-        <View>
-            {items.map((item, index) => (
-                <ShoppingItem
-                    key={index}
-                    item={item}
-                />
-            ))}
-        </View>
+       <FlatList
+            data={items}
+            renderItem={({ item }) => <ShoppingItem item={item} />}
+            keyExtractor={(item, index) => index.toString()}
+        />
     );
 }
