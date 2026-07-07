@@ -8,21 +8,17 @@ import ShoppingInput from "../components/ShoppingInput";
 export default function HomeScreen() {
 
     const [title, setTitle] = useState("My Shopping List");
+    const [shoppingItems, setShoppingItems] = useState<string[]>([]);
+    const addItem = (item: string) => {
+        setShoppingItems([...shoppingItems, item]);
+    };
 
   return (
     <View style={styles.container}>
       <Title text={title} />
-      <ShoppingInput />
-      <Button 
-        title="Change Title" 
-       onPress={() => {
-        if (title === "My Shopping List") {
-            setTitle("Weekend Groceries");
-        } else {
-            setTitle("My Shopping List");
-        }
-    }} />
-    
+      <ShoppingInput 
+        onAddItem={addItem}
+      />
     </View>
   );
 }
