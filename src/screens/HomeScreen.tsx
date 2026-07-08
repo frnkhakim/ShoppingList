@@ -1,11 +1,12 @@
 import React from 'react';
-import { View, StyleSheet, Modal, Text, Button, TextInput, Pressable, ScrollView } from 'react-native';
+import { View, StyleSheet, Modal, Text, Button, TextInput, Pressable, ScrollView, Alert } from 'react-native';
 import Title from "../components/Title";
 import ShoppingInput from "../components/ShoppingInput";
 import ShoppingList from "../components/ShoppingList";
 import { useShoppingList } from "../hooks/useShoppingList";
 import { useState, useMemo } from "react";
 import type { ShoppingItem } from "../types/ShoppingItem";
+import { useTheme } from "../context/ThemeContext";
 
 /*
 ================================================================================
@@ -94,6 +95,8 @@ Try editing an item without changing search → counts don't recalculate!
 
 export default function HomeScreen() {
 
+    const { colors } = useTheme();
+
     const {
         shoppingItems,
         addItem,
@@ -177,71 +180,131 @@ export default function HomeScreen() {
         closeModal();
     };
 
+    // CLEAR FUNCTIONS
+    // ===============
+    const clearAll = () => {
+        Alert.alert(
+            'Clear All Items',
+            'Are you sure you want to delete all items?',
+            [
+                { text: 'Cancel', style: 'cancel' },
+                { text: 'Clear All', style: 'destructive', onPress: () => shoppingItems.forEach(item => deleteItem(item.id)) },
+            ]
+        );
+    };
+
+    const clearActive = () => {
+        Alert.alert(
+            'Clear Active Items',
+            'Are you sure you want to delete all active (incomplete) items?',
+            [
+                { text: 'Cancel', style: 'cancel' },
+                { text: 'Clear Active', style: 'destructive', onPress: () => shoppingItems.filter(item => !item.completed).forEach(item => deleteItem(item.id)) },
+            ]
+        );
+    };
+
+    const clearCompleted = () => {
+        Alert.alert(
+            'Clear Done Items',
+            'Are you sure you want to delete all completed items?',
+            [
+                { text: 'Cancel', style: 'cancel' },
+                { text: 'Clear Done', style: 'destructive', onPress: () => shoppingItems.filter(item => item.completed).forEach(item => deleteItem(item.id)) },
+            ]
+        );
+    };
+
     return (
-        <View style={styles.container}>
+        <View style={{ flex: 1, backgroundColor: colors.background, paddingTop: 20 }}>
             <Title text="My Shopping List" />
-            
-            <View style={styles.searchContainer}>
+
+            <View style={{ paddingHorizontal: 12, paddingVertical: 12, backgroundColor: colors.surface, borderBottomWidth: 1, borderBottomColor: colors.border }}>
                 <TextInput
-                    style={styles.searchInput}
+                    style={{ borderWidth: 1, borderColor: colors.borderLight, borderRadius: 8, paddingHorizontal: 16, paddingVertical: 10, fontSize: 16, backgroundColor: colors.inputBg, color: colors.text }}
                     placeholder="🔍 Search items..."
-                    placeholderTextColor="#999"
+                    placeholderTextColor={colors.textMuted}
                     value={searchText}
                     onChangeText={setSearchText}
                     clearButtonMode="while-editing"
                 />
             </View>
-            
-            <View style={styles.filterContainer}>
-                <Pressable 
-                    style={[styles.filterButton, filter === 'all' && styles.filterButtonActive]}
+
+            <View style={{ flexDirection: 'row', justifyContent: 'space-around', paddingVertical: 12, paddingHorizontal: 10, backgroundColor: colors.surface, borderBottomWidth: 1, borderBottomColor: colors.border }}>
+                <Pressable
+                    style={{ paddingHorizontal: 12, paddingVertical: 8, borderRadius: 20, backgroundColor: filter === 'all' ? colors.accent : colors.filterButtonBg }}
                     onPress={() => setFilter('all')}
                 >
-                    <Text style={filter === 'all' ? styles.filterButtonTextActive : styles.filterButtonText}>
+                    <Text style={{ fontSize: 12, fontWeight: filter === 'all' ? '600' : '500', color: filter === 'all' ? 'white' : colors.textSecondary }}>
                         All ({counts.allCount}{hasActiveSearch && ` / ${filteredItems.length}`})
                     </Text>
                 </Pressable>
-                <Pressable 
-                    style={[styles.filterButton, filter === 'active' && styles.filterButtonActive]}
+                <Pressable
+                    style={{ paddingHorizontal: 12, paddingVertical: 8, borderRadius: 20, backgroundColor: filter === 'active' ? colors.accent : colors.filterButtonBg }}
                     onPress={() => setFilter('active')}
                 >
-                    <Text style={filter === 'active' ? styles.filterButtonTextActive : styles.filterButtonText}>
+                    <Text style={{ fontSize: 12, fontWeight: filter === 'active' ? '600' : '500', color: filter === 'active' ? 'white' : colors.textSecondary }}>
                         Active ({counts.activeCount}{hasActiveSearch && ` / ${counts.activeSearchCount}`})
                     </Text>
                 </Pressable>
-                <Pressable 
-                    style={[styles.filterButton, filter === 'completed' && styles.filterButtonActive]}
+                <Pressable
+                    style={{ paddingHorizontal: 12, paddingVertical: 8, borderRadius: 20, backgroundColor: filter === 'completed' ? colors.accent : colors.filterButtonBg }}
                     onPress={() => setFilter('completed')}
                 >
-                    <Text style={filter === 'completed' ? styles.filterButtonTextActive : styles.filterButtonText}>
+                    <Text style={{ fontSize: 12, fontWeight: filter === 'completed' ? '600' : '500', color: filter === 'completed' ? 'white' : colors.textSecondary }}>
                         Done ({counts.completedCount}{hasActiveSearch && ` / ${counts.completedSearchCount}`})
                     </Text>
                 </Pressable>
             </View>
-            <ShoppingInput 
+
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 10, paddingVertical: 8, backgroundColor: colors.surface, borderBottomWidth: 1, borderBottomColor: colors.border, gap: 8 }}>
+                <Pressable
+                    style={{ flex: 1, paddingVertical: 10, paddingHorizontal: 8, borderRadius: 8, alignItems: 'center', backgroundColor: colors.clearDanger }}
+                    onPress={clearAll}
+                    disabled={counts.allCount === 0}
+                >
+                    <Text style={{ fontSize: 12, fontWeight: '600', color: colors.text }}>🗑️ Clear All</Text>
+                </Pressable>
+                <Pressable
+                    style={{ flex: 1, paddingVertical: 10, paddingHorizontal: 8, borderRadius: 8, alignItems: 'center', backgroundColor: colors.clearWarning }}
+                    onPress={clearActive}
+                    disabled={counts.activeCount === 0}
+                >
+                    <Text style={{ fontSize: 12, fontWeight: '600', color: colors.text }}>✓ Clear Active</Text>
+                </Pressable>
+                <Pressable
+                    style={{ flex: 1, paddingVertical: 10, paddingHorizontal: 8, borderRadius: 8, alignItems: 'center', backgroundColor: colors.clearWarning }}
+                    onPress={clearCompleted}
+                    disabled={counts.completedCount === 0}
+                >
+                    <Text style={{ fontSize: 12, fontWeight: '600', color: colors.text }}>✕ Clear Done</Text>
+                </Pressable>
+            </View>
+
+            <ShoppingInput
                 onAddItem={addItem}
             />
-            <ShoppingList 
-                items={filteredItems} 
-                onEdit={openEditModal} 
+            <ShoppingList
+                items={filteredItems}
+                onEdit={openEditModal}
                 onDelete={deleteItem}
                 onToggle={toggleComplete}
             />
             <Modal visible={isModalVisible} animationType="slide" transparent={true}>
-                <View style={styles.centeredView}>
-                    <View style={styles.modalView}>
-                        <Text style={styles.modalTitle}>Edit Item</Text>
+                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
+                    <View style={{ margin: 20, backgroundColor: colors.modalBg, borderRadius: 20, padding: 35, alignItems: 'center', shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.25, shadowRadius: 4, elevation: 5, width: '80%' }}>
+                        <Text style={{ fontSize: 24, fontWeight: 'bold', marginBottom: 20, color: colors.text }}>Edit Item</Text>
                         <TextInput
-                            style={styles.input}
+                            style={{ borderWidth: 2, borderColor: colors.accent, padding: 12, marginBottom: 20, width: '100%', borderRadius: 8, fontSize: 16, color: colors.text, backgroundColor: colors.inputBg }}
                             value={editText}
                             onChangeText={setEditText}
                             placeholder="Edit item name"
-                            placeholderTextColor="#999"
+                            placeholderTextColor={colors.textMuted}
                         />
-                        <View style={styles.buttonContainer}>
+                        <View style={{ width: '100%', marginBottom: 12, borderRadius: 8, overflow: 'hidden' }}>
                             <Button title="Save" onPress={saveEdit} color="#4CAF50" />
                         </View>
-                        <View style={styles.buttonContainer}>
+                        <View style={{ width: '100%', marginBottom: 12, borderRadius: 8, overflow: 'hidden' }}>
                             <Button title="Cancel" onPress={closeModal} color="#f44336" />
                         </View>
                     </View>
@@ -250,100 +313,3 @@ export default function HomeScreen() {
         </View>
     );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f5f5f5',
-    paddingTop: 20,
-  },
-  searchContainer: {
-    paddingHorizontal: 12,
-    paddingVertical: 12,
-    backgroundColor: 'white',
-    borderBottomWidth: 1,
-    borderBottomColor: '#e0e0e0',
-  },
-  searchInput: {
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 8,
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-    fontSize: 16,
-    backgroundColor: '#f9f9f9',
-    color: '#333',
-  },
-  filterContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    paddingVertical: 12,
-    paddingHorizontal: 10,
-    backgroundColor: 'white',
-    borderBottomWidth: 1,
-    borderBottomColor: '#e0e0e0',
-  },
-  filterButton: {
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 20,
-    backgroundColor: '#f0f0f0',
-  },
-  filterButtonActive: {
-    backgroundColor: '#2196F3',
-  },
-  filterButtonText: {
-    fontSize: 12,
-    color: '#666',
-    fontWeight: '500',
-  },
-  filterButtonTextActive: {
-    fontSize: 12,
-    color: 'white',
-    fontWeight: '600',
-  },
-  centeredView: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  },
-  modalView: {
-    margin: 20,
-    backgroundColor: 'white',
-    borderRadius: 20,
-    padding: 35,
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-    width: '80%',
-  },
-  modalTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
-    color: '#333',
-  },
-  input: {
-    borderWidth: 2,
-    borderColor: '#2196F3',
-    padding: 12,
-    marginBottom: 20,
-    width: '100%',
-    borderRadius: 8,
-    fontSize: 16,
-    color: '#333',
-  },
-  buttonContainer: {
-    width: '100%',
-    marginBottom: 12,
-    borderRadius: 8,
-    overflow: 'hidden',
-  },
-});

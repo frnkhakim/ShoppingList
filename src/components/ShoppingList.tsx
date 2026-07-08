@@ -21,6 +21,7 @@ export default function ShoppingList({
 
     return (
        <FlatList
+            style={{ flex: 1 }}
             data={items}
             renderItem={({ item }) => <ShoppingItem {...item} onDelete={onDelete} onEdit={() => onEdit(item)} onToggle={onToggle} />}
             keyExtractor={(item) => item.id}
